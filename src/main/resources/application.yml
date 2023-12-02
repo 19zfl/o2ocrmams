@@ -1,0 +1,15 @@
+# 端口号
+server:
+  port: 80
+# 配置数据库连接信息
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql:///o2ocrmams
+    username: root
+    password: 123456
+# 日志信息打印
+logging:
+  level:
+    com:
+      zfl19: debug
