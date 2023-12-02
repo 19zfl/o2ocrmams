@@ -4,6 +4,9 @@ import com.zfl19.basic.dto.AjaxResult;
 import com.zfl19.basic.query.BaseQuery;
 import com.zfl19.system.domain.Department;
 import com.zfl19.system.service.IDepartmentService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController // RestController = ResponseBody + Controller
 @RequestMapping("/dm") // 前端访问的一级路径
+@Api(value = "部门模块接口", tags = {"部门模块接口"})
 public class DepartmentController {
 
     /**
@@ -29,6 +33,7 @@ public class DepartmentController {
      * @return
      */
     @GetMapping("/all")
+    @ApiOperation(value = "获取所有部门信息【非分页】", notes = "获取所有部门信息【非分页】")
     public AjaxResult getDepartmentAllInfo() {
         return AjaxResult.getSuccess(dmService.getDepartmentAllInfo());
     }
@@ -39,7 +44,8 @@ public class DepartmentController {
      * @return 分页查询数据
      */
     @PostMapping("/page")
-    public AjaxResult getDepartmentAllInfoByPageList(@RequestBody BaseQuery query) {
+    @ApiOperation(value = "分页查询", notes = "分页查询")
+    public AjaxResult getDepartmentAllInfoByPageList(@ApiParam(value = "分页参数") @RequestBody BaseQuery query) {
         return AjaxResult.getSuccess(dmService.getDepartmentAllInfoByPageList(query));
     }
 
@@ -49,7 +55,8 @@ public class DepartmentController {
      * @return  执行反馈信息
      */
     @DeleteMapping("/{id}")
-    public AjaxResult deleteDepartmentInfoById(@PathVariable("id") Long id) {
+    @ApiOperation(value = "删除某一部门信息", notes = "删除某一部门信息")
+    public AjaxResult deleteDepartmentInfoById(@ApiParam(value = "主键ID") @PathVariable("id") Long id) {
         try {
             dmService.deleteById(id);
             return AjaxResult.getSuccess();
@@ -65,7 +72,8 @@ public class DepartmentController {
      * @return 执行反馈信息
      */
     @PostMapping("/input")
-    public AjaxResult addAndUpdateDeparmentInfo(@RequestBody Department department) {
+    @ApiOperation(value = "新增 + 修改", notes = "根据id是否为空确定是新增或者修改")
+    public AjaxResult addAndUpdateDeparmentInfo(@ApiParam(value = "某一部门信息") @RequestBody Department department) {
         try {
             dmService.addAndUpdate(department);
             return AjaxResult.getSuccess();
