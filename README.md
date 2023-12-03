@@ -13,6 +13,7 @@
 ##### 3. 导入项目需要的依赖
 
 ```pom.xml
+    <!-- SpringBoot项目的标志 -->
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -686,3 +687,119 @@ public class SwaggerConfig {
 - @ApiParam：放置在controller类方法的参数前；
 - @ApiModel：放置在实体类类名上；
 - @ApiModelProperty：放置在实体类中属性字段上。
+
+### 四、非关系型数据库Redis整合
+
+##### 1. 导入依赖
+
+```pom.xml
+<dependency>
+	<groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-data-redis</artifactId>
+</dependency>
+```
+
+##### 2. 配置yml文件
+
+```application.yml
+# 端口号
+server:
+  port: 80
+# 配置数据库连接信息
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql:///o2ocrmams
+    username: root
+    password: 123456
+  # redis连接信息
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    timeout: 1000
+    password:
+    jedis:
+      pool:
+        max-active: 30  # 给定时间可以分配的最大连接数，使用负值表示没有限制
+        max-idle: 10  # 最大空闲连接数
+        min-idle: 1   # 最小空闲连接数
+        max-wait: -1  # 连接池最大等待时间 -1表示没有限制
+# 日志信息打印
+logging:
+  level:
+    com:
+      zfl19: debug
+```
+
+##### 3. 测试
+
+在之前的测试类中注入StringRedisTemplate，如下：
+
+![](https://gitee.com/coder_zfl/markdown-image-cloud-drive/raw/master/markdown/202312031102356.png)
+
+运行完之后redis中存在这个key和value就说明redis整合是没有问题的：
+
+![image-20231203110343725](C:\Users\zfl19\AppData\Roaming\Typora\typora-user-images\image-20231203110343725.png)
+
+### 五、后台管理系统前端搭建
+
+后端项目端口号配置，如果不是8080就需要将端口号改成对应后端端口号：
+
+![](https://gitee.com/coder_zfl/markdown-image-cloud-drive/raw/master/markdown/202312031309620.png)
+
+配置号前端请求接口后是没有办法访问后端，需要在后端配置跨域或者前端配置；
+
+![](https://gitee.com/coder_zfl/markdown-image-cloud-drive/raw/master/markdown/202312031315088.png)
+
+##### 1. 跨域配置类
+
+```GlobalCorsConfig.java\
+package com.zfl19.basic.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
+
+/**
+ * @author: 19zfl
+ * @description: 前端跨域访问配置类
+ * @date 2023-12-03
+ */
+@Configuration
+public class GlobalCorsConfig {
+
+    @Bean
+    public CorsFilter corsFilter() {
+        CorsConfiguration config = new CorsConfiguration();
+        // 1. 添加允许访问的ip
+        config.addAllowedOrigin("http://127.0.0.1:6001");
+        config.addAllowedOrigin("http://localhost:6001");
+        // 2. 配置是否发送cookie信息
+        config.setAllowCredentials(true);
+        // 3. 配置前端允许请求的方式
+        config.addAllowedMethod("OPTIONS");
+        config.addAllowedMethod("HEAD");
+        config.addAllowedMethod("PUT");
+        config.addAllowedMethod("GET");
+        config.addAllowedMethod("POST");
+        config.addAllowedMethod("DELETE");
+        config.addAllowedMethod("PATCH");
+        // 4. 允许请求头信息
+        config.addAllowedHeader("*");
+        // 5. 添加映射路径，拦截一切请求
+        UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
+        urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", config);
+        // 6. 返回
+        return new CorsFilter(urlBasedCorsConfigurationSource);
+    }
+
+}
+```
+
+##### 2. 接口连通性测试
+
+![](https://gitee.com/coder_zfl/markdown-image-cloud-drive/raw/master/markdown/202312031456696.png)
+
+表单中的数据信息展示不完整，就需要重写sql语句实现；
