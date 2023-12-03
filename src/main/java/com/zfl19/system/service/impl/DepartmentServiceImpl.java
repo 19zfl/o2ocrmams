@@ -41,12 +41,12 @@ public class DepartmentServiceImpl implements IDepartmentService {
      * @return  分页数据
      */
     @Override
-    public PageList<Department> getDepartmentAllInfoByPageList(BaseQuery query) {
+    public PageList<Department> getDepartmentAllInfoByPage(BaseQuery query) {
         // 分页查询三步骤：
         // 1. 设置分页参数
         PageHelper.startPage(query.getPageNum(), query.getPageSize());
         // 2，执行查询操作
-        List<Department> departments = dmMapper.selectAll();
+        List<Department> departments = dmMapper.getDepartmentAllInfoByPage();
         // 3. 封装分页数据
         PageInfo<Department> departmentPageInfo = new PageInfo<>(departments);
         // 4. 使用PageList进行数据传递

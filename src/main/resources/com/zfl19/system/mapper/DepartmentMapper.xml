@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zfl19.system.mapper.DepartmentMapper">
+
+    <select id="getDepartmentAllInfoByPage" resultType="com.zfl19.system.domain.Department">
+        select td.*, te.username managerName, td.name parentName
+        from t_department td
+                 LEFT JOIN t_employee te on td.manager_id = te.id
+                 LEFT JOIN t_department td1 on td.parent_id = td1.id
+    </select>
+
+</mapper>

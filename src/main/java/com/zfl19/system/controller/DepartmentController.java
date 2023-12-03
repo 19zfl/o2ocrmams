@@ -2,6 +2,7 @@ package com.zfl19.system.controller;
 
 import com.zfl19.basic.dto.AjaxResult;
 import com.zfl19.basic.query.BaseQuery;
+import com.zfl19.basic.query.PageList;
 import com.zfl19.system.domain.Department;
 import com.zfl19.system.service.IDepartmentService;
 import io.swagger.annotations.Api;
@@ -46,7 +47,7 @@ public class DepartmentController {
     @PostMapping("/page")
     @ApiOperation(value = "分页查询", notes = "分页查询")
     public AjaxResult getDepartmentAllInfoByPageList(@ApiParam(value = "分页参数") @RequestBody BaseQuery query) {
-        return AjaxResult.getSuccess(dmService.getDepartmentAllInfoByPageList(query));
+        return AjaxResult.getSuccess(dmService.getDepartmentAllInfoByPage(query));
     }
 
     /**

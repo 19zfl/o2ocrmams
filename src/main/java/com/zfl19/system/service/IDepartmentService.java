@@ -23,7 +23,7 @@ public interface IDepartmentService {
      * 通过分页工具获取所有部门信息
      * @return
      */
-    PageList<Department> getDepartmentAllInfoByPageList(BaseQuery query);
+    PageList<Department> getDepartmentAllInfoByPage(BaseQuery query);
 
     /**
      * 根据主键id删除部门信息
